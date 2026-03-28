@@ -1,0 +1,42 @@
+/*
+ * boards/nrf52840dongle_nrf52840.overlay
+ *
+ * LED aliases (GPIO + PWM) + USB CDC ACM alias for km_proto frame reception.
+ *
+ * Board node labels (from nrf52840dongle_nrf52840_common.dtsi):
+ *   led0_green : P0.06  ACTIVE_LOW  (GPIO only)
+ *   led1_red   : P0.08  ACTIVE_LOW  (PWM0 ch0)
+ *   led1_green : P1.09  ACTIVE_LOW  (PWM0 ch1)
+ *   led1_blue  : P0.12  ACTIVE_LOW  (PWM0 ch2)
+ */
+
+/ {
+	aliases {
+		led-active  = &led0_green;   /* green GPIO — connected state  */
+		led-idle    = &led1_red;     /* red  GPIO  — fallback         */
+		led-usb     = &led1_blue;    /* blue GPIO  — fallback         */
+		pwm-red     = &red_pwm_led;  /* red  PWM   — breathing        */
+		pwm-blue    = &blue_pwm_led; /* blue PWM   — adv blink        */
+	};
+};
+
+/* Board defines PWM LEDs as ACTIVE_LOW (PWM_POLARITY_INVERTED).
+ * Override to POLARITY_NORMAL: pulse=0 → off, pulse=period → full brightness. */
+&red_pwm_led {
+	pwms = <&pwm0 0 PWM_MSEC(2) PWM_POLARITY_INVERTED>;
+};
+
+&blue_pwm_led {
+	pwms = <&pwm0 2 PWM_MSEC(2) PWM_POLARITY_INVERTED>;
+};
+
+/* Enable the board's built-in CDC ACM UART and use it as the km serial port */
+&board_cdc_acm_uart {
+	status = "okay";
+};
+
+/ {
+	aliases {
+		km-uart = &board_cdc_acm_uart;
+	};
+};

@@ -4,3 +4,6 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(keyboard-switch-ble)
 
 target_sources(app PRIVATE src/main.c)
+
+# Pull in sample_usbd_init_device() used by usb_uart_init()
+include(${ZEPHYR_BASE}/samples/subsys/usb/common/common.cmake)

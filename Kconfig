@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+
+mainmenu "KVM Keyboard Switch BLE"
+
+source "$ZEPHYR_BASE/samples/subsys/usb/common/Kconfig.sample_usbd"
+
+source "Kconfig.zephyr"
