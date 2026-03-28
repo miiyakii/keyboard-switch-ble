@@ -201,6 +201,10 @@ static void send_frame_to(int dongle_idx, uint8_t type, const uint8_t *payload)
 
 	km_build_frame(frame, type, payload);
 
+	fprintf(stderr, "TX dongle%d type=0x%02x mods=0x%02x keys=%02x%02x%02x%02x%02x%02x\n",
+		dongle_idx, type,
+		payload[0], payload[2], payload[3], payload[4], payload[5], payload[6], payload[7]);
+
 	ssize_t n = write(fd, frame, KM_FRAME_KB_LEN);
 
 	if (n < 0 && errno != EAGAIN) {
